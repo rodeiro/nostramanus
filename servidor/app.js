@@ -27,12 +27,13 @@ mongoose.connect('mongodb://localhost/hand', function(err, res) {
 var hands = express.Router();
 
 hands.route('/hands')
-  .get(HandCtrl.findAllHands);
+  .get(HandCtrl.findAllHands)
+  .post(HandCtrl.addHand);
 
 hands.route('/hands/:id')
-  .get(HandCtrl.findById);
- /* .put(HandCtrl.updateHand)
-  .delete(HandCtrl.deleteHand);*/
+  .get(HandCtrl.findById)
+ .put(HandCtrl.updateHand)
+  .delete(HandCtrl.deleteHand);
 
 app.use('/api', hands);
 
