@@ -10,5 +10,5 @@ var handSchema = new mongoose.Schema({
 	battery: Number
 }); 
 
-//Return model
+//Return model, hands es la colección
 module.exports = restful.model('Hands',handSchema);
