@@ -60,7 +60,7 @@ HandModel.findById("54ef6f22308d63f009acd769",function(err,user){
 
 
 //DELETE
-HandModel.findByIdAndRemove("54e388c4b0c463ff8f36e77f",function(err){
+HandModel.findByIdAndRemove("5537ee0e74466cdcb812ad97",function(err){
 	if (err) return console.error(err);
   	console.dir("Borrado!");
 });
