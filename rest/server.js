@@ -11,7 +11,7 @@ mongoose.connect('mongodb://localhost/hands');
 //Express
 var app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 

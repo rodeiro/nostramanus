@@ -115,13 +115,15 @@ router.route('/personas').get(function(req, res) {
 
 /*
 Ejemplo 
-
-db.personas.insert({ nombre: “Andy”,
-    apellido1: “Garcia”,
-    apellido2: “Garcia”,
-    password: “PASS”,
-    fechaNacimiento: Sep 04, 1967,
-    email: “andy.gar@udc.es”})
+{
+        "nombre": "Dwayne",
+        "apellido1": "Rock",
+        "apellido2": "Johnson",
+        "password": "ROCK23",
+        "fechaNacimiento": "1975-09-03T22:00:00.000Z",
+        "email": "therock@udc.es"
+ 
+    }
 */
 
 
@@ -278,7 +280,7 @@ router.route('/sesiones/:id').delete(function(req, res) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                        EXPERIMENTO - el array no funciona bien                         
+//                                                        EXPERIMENTO                        
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -314,7 +316,7 @@ router.route('/experimentos').get(function(req, res) {
   });
 });
 
-//GET SESION POR ID
+//GET EXPERIMENTO POR ID
 router.route('/experimentos/:id').get(function(req, res) {
   Experimento.findOne({ _id: req.params.id}, function(err, experimento) {
     if (err) {
@@ -325,7 +327,7 @@ router.route('/experimentos/:id').get(function(req, res) {
 });
 
 
-//ACTUALIZAR SESION
+//ACTUALIZAR EXPERIMENTO
 router.route('/experimentos/:id').put(function(req,res){
   Experimento.findOne({ _id: req.params.id }, function(err, experimento) {
     if (err) {
@@ -365,22 +367,23 @@ router.route('/experimentos/:id').delete(function(req, res) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                        MANO- ¿Meter mantenimiento?                             
+//                                                          MANO                            
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-  persona: 553910fe4db90ac50186ee1d,
-  bateria: 55,
-  estado: Cambiar,
-  potenciaMedia: 5,
-  version: 0.1,
-  dimension: 15,
-  tipo: tipo1,
-  activacion: Dec 29, 2014,
-  frecuenciaFallo: 1,
-  mantenimiento: {
-    fechaArreglo: Mar 19, 2015,
-    concepto: Cambio de batería,
+        "persona": "553a8744396c48d10286fa2f",
+        "bateria": 32,
+        "estado": "Perfecto",
+        "potenciaMedia": 4,
+        "version": "0.1",
+        "dimension": 18,
+        "tipo": "tipo2",
+        "activacion": "2015-01-28T23:00:00.000Z",
+        "frecuenciaFallo": 0,
+        "mantenimiento": {
+            "fechaArreglo": "2015-02-28T23:00:00.000Z",
+            "concepto": "Ajuste sensores"
+        }
   }
 */
 //CREAR MANO
