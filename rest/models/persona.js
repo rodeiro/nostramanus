@@ -8,6 +8,7 @@ var personaSchema = new mongoose.Schema({
 	nombre: String,
 	apellido1: String,
 	apellido2: String,
+	dni: String,
 	password: String,
 	fechaNacimiento: Date,
 	email: String

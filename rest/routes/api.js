@@ -13,15 +13,6 @@ var Sesion = require('../models/sesion');
 var Experimento = require('../models/experimento');
 var Mano = require('../models/mano');
 
-/*
-//Routes
-Hand.methods(['get','put','post','delete']);
-Hand.register(router,'/hands');
-
-
-
-//Return router
-module.exports = router;*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                            HANDS (testing)
@@ -103,6 +94,7 @@ router.route('/hands/:id').delete(function(req, res) {
 //                                                          PERSONA
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 //GET PERSONAS
 router.route('/personas').get(function(req, res) {
   Persona.find(function(err, personas) {
@@ -118,6 +110,7 @@ Ejemplo
 {
         "nombre": "Dwayne",
         "apellido1": "Rock",
+        "dni":"47363763R"
         "apellido2": "Johnson",
         "password": "ROCK23",
         "fechaNacimiento": "1975-09-03T22:00:00.000Z",
@@ -134,6 +127,17 @@ router.route('/personas/:id').get(function(req, res) {
       return res.send(err);
     }
  
+    res.json(persona);
+  });
+});
+
+
+//GET PERSONA POR DNI 
+router.route('/personas/dni/:dni').get(function(req, res) {
+  Persona.find({ dni: req.params.dni}, function(err, persona) {
+    if (err) {
+      return res.send(err);
+    }
     res.json(persona);
   });
 });
@@ -193,7 +197,6 @@ router.route('/personas/:id').delete(function(req, res) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                        SESIÓN                             
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /*
 Ejemplo
 
@@ -241,6 +244,15 @@ router.route('/sesiones/:id').get(function(req, res) {
   });
 });
 
+//GET SESION POR FECHA
+router.route('/sesiones/fecha/:fecha').get(function(req, res) {
+  Sesion.find({ fecha: req.params.fecha}, function(err, sesion) {
+    if (err) {
+      return res.send(err);
+    }
+    res.json(sesion);
+  });
+});
 
 //ACTUALIZAR SESION
 router.route('/sesiones/:id').put(function(req,res){
@@ -284,13 +296,12 @@ router.route('/sesiones/:id').delete(function(req, res) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 /*
 Ejemplo
 
 sesion: 553933306f1727f0025e60e4,
-evento: puño cerrado
-resultado: 1,2,3,4,5,6,7,8,9,10
+evento: puño cerrado //pares evento tiempo
+resultado: 1,2,3,4,5,6,7,8,9,10 //pares resultado tiempo
 */
 //CREAR EXPERIMENTO
 router.route('/experimentos').post(function(req, res) {
@@ -319,6 +330,29 @@ router.route('/experimentos').get(function(req, res) {
 //GET EXPERIMENTO POR ID
 router.route('/experimentos/:id').get(function(req, res) {
   Experimento.findOne({ _id: req.params.id}, function(err, experimento) {
+    if (err) {
+      return res.send(err);
+    }
+    res.json(experimento);
+  });
+});
+
+
+//GET EXPERIMENTO POR SESION
+router.route('/experimentos/sesion/:id').get(function(req, res) {
+  Experimento.find({ sesion: req.params.id}, function(err, experimento) {
+    if (err) {
+      return res.send(err);
+    }
+    res.json(experimento);
+  });
+});
+
+
+
+//GET EXPERIMENTO POR EVENTOS
+router.route('/experimentos/evento/:evento').get(function(req, res) {
+  Experimento.find({ evento: req.params.evento}, function(err, experimento) {
     if (err) {
       return res.send(err);
     }

@@ -101,6 +101,7 @@
 //http://localhost:8000/blackberry10/www/#pagetwo
     //HTTP
     //https://github.com/wf9a5m75/phonegap-http-request
+    /*
    function comunicate(){
         var httpReq = new plugin.HttpRequest();
         httpReq.get("192.168.1.34:3000/api/hands/", function(status, data) {
@@ -142,10 +143,12 @@
 
         function callbackFunction(){
             if (xmlhttp.readyState == 4){
+                alert("CallBACK");
+
                 name = xmlhttp.responseJSON.documentElement.getElementsByTagName("name")[0].value; 
                 //document.getElementById("demo").innerHTML =obj.employees[1].firstName;
                 alert(name);
-                alert("CallBACK");
+                
                 document.getElementById("myP2").innerHTML=name;
   
                 /*
@@ -156,27 +159,64 @@
                 } else { 
                     alert(xml + 'have a <name> tag');
                 }*/
-                
+           /*     
             }
-        }
+        }*/
 
+        /*
         $(document).ready(function(){
-         $("button").click(function(){
-            $.getJSON("192.168.1.34:3000/api/hands/", function(result){
-                $.each(result, function(i, field){
+         $("#ultima").vclick(function(){
+            $.getJSON("192.168.1.34:3000/api/personas/", function(result){
+                alert("BEEN HERE");
+                alert(data);
+               /* $.each(result, function(i, field){
                     alert(field);
                    //s $("div").append(field + " ");
-                });
-            });
+                });*/
+          /*  });
          });
         });
+
 
 
         //document.getElementById("myP").innerHTML= "ENVIADO";
         
        // document.getElementById("myP2").innerHTML=xmlhttp.responseJSON;
     }
-    
+    */
+/*
+    $(document).on("pagecreate","#pagetwo",function(){
+        $("p").on("click",function(){
+            //$(this).hide();
+              /**  $.getJSON("192.168.1.34:3000/api/personas/", function(data){
+                    $.each(result, function(i, field){
+                        $("#cambio").append(field + " ");
+                    });
+                }
+        });                       
+    });*/
+$(document).ready(function(){
+    $("p").click(function(){
+        $.ajax({url: "192.168.1.34:3000/api/personas/", 
+                async: false, 
+                dataType: "json",
+                error: function(xhr, status, error) {
+                    // Display a generic error for now.
+                    alert("AJAX Error!");
+                }
+                success: function(result){
+                    document.getElementById("cambio").innerHTML = result;
+                }});
+    });
+});
+
+$(document).on("pagecreate","#pagetwo",function(){
+    $("#probando").click(function(){
+            $('#cambio').text('FUNCIONA');
+    };
+});
+
+ 
     </script>
   </head>
   <body>
@@ -228,7 +268,7 @@
         </div>
 
         <div data-role="main" class="ui-content">
-            <p> Página en construcción </p>
+            <!--<p> Página en construcción </p>
             <p><a href="#" onclick="comunicate(); return false;">Request</a></p>
             <p><a href="#" onclick="comunicateJSON(); return false;">RequestJSON</a></p>
             <p><a href="#" onclick="manual(); return false;">Manual</a></p>
@@ -236,11 +276,16 @@
             <p id= "myP2"></p>
             <p id= "myP"></p>
 
-            <button>Get JSON data</button>
-            <p id= "finalJ"></p>
+            <button id = "ultima">Get JSON data</button>
 
+            <button id = "ultima2">BOTON DE PRUEBA</button>
 
+            <p id= "finalJ">Toca aquí</p>
 
+                -->
+                <div id = "probando"> PROBANDO<div>
+                <p>PRUEBA 1000</p>
+                <div id = "cambio"></div>
         </div>
 
         <div data-role="footer" data-position="fixed">
@@ -251,3 +296,27 @@
   </body>
 </html> 
 
+
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("p").click(function(){
+        $(this).hide();
+    });
+});
+</script>
+</head>
+<body>
+
+<p>If you click on me, I will disappear.</p>
+<p>Click me away!</p>
+<p>Click me too!</p>
+
+</body>
+</html>
+
+-->
