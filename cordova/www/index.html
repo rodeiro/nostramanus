@@ -23,13 +23,70 @@
     //
     document.addEventListener("deviceready", onDeviceReady, false);
 
-    // device APIs are available
+
+
+// Populate the database
     //
-    function onDeviceReady() {
-        // Empty
+    function populateDB(tx) {
+        tx.executeSql('DROP TABLE IF EXISTS DEMO');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+    }
+
+    // Query the database
+    //
+    function queryDB(tx) {
+        tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+    }
+
+    // Query the success callback
+    //
+    function querySuccess(tx, results) {
+        alert("Returned rows = " + results.rows.length);
+        // this will be true since it was a select statement and so rowsAffected was 0
+        if (!results.rowsAffected) {
+            alert('No rows affected!');
+            return false;
+        }
+        // for an insert statement, this property will return the ID of the last inserted row
+        alert("Last inserted row ID = " + results.insertId);
+    }
+
+    // Transaction error callback
+    //
+    function errorCB(err) {
+        alert("Error processing SQL: "+err.code);
+    }
+
+    // Transaction success callback
+    //
+    function successCB() {
+        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+        db.transaction(queryDB, errorCB);
     }
 
 
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        document.getElementById("result").innerHTML = "DEVICE READY";
+        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+        db.transaction(populateDB, errorCB, successCB);    }
+
+
+
+/*LOCALSTORAGE
+$(document).ready(function(){
+
+    // Store
+    window.localStorage.setItem("lastname", "Smith");
+    // Retrieve
+    document.getElementById("result").innerHTML = window.localStorage.getItem("lastname");
+}
+ */
+                    
+        
 
 $(document).ready(function(){
     $("p").click(function(){
@@ -78,9 +135,13 @@ $(document).on("pagecreate","#home",function(){
             <p id= "finalJ">Toca aquí</p>
 
                 -->
+
                 <button id = "probando"> PROBANDO</button>
                 <p>PRUEBA 1000</p>
                 <div id = "cambio"></div>
+
+                <div id = "result"></div>
+
 
 
 
