@@ -1,146 +1,232 @@
+document.addEventListener("deviceready", onDeviceReady, false);
 
 
-var app = {
-    macAddress: "60:FB:42:78:E4:1A",  // get your mac address from bluetoothSerial.list
-    chars: "",
+var bluetoothle;
 
-/*
-    Application constructor
- */
-    initialize: function() {
-        this.bindEvents();
-        console.log("Starting SimpleSerial app");
-    },
-/*
-    bind any events that are required on startup to listeners:
+var myAddress= "F8:46:81:70:78:78";
+var myServiceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+var myCharacteristicUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+var datos = [];
+var evento = "SinEvento";
+
+
+
+function onDeviceReady() {
+  bluetoothle = window.bluetoothle;
+
+  var paramsObj = {request:true};
+
+  console.log("Initialize : " + JSON.stringify(paramsObj));
+
+  bluetoothle.initialize(initializeSuccess, initializeError, paramsObj);
+}
+
+function initializeSuccess(obj){
+  console.log("Initialize Success : " + JSON.stringify(obj));
+  alert(JSON.stringify(obj));
+
+  if (obj.status == "enabled")
+  {
+    console.log("Enabled");
+  }
+  else
+  {
+    console.log("Unexpected Initialize Status");
+  }
+}
+
+function initializeError(obj){
+  console.log("Initialize Error : " + JSON.stringify(obj));
+}
+
+
+/**
+* Event listener for connection button
+*
 */
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-        connectButton.addEventListener('touchend', app.manageConnection, false);
-    },
+$("#BOTONCONECTAR").click(function () {
+  connect(myAddress);
 
-/*
-    this runs when the device is ready for user interaction:
-*/
-    onDeviceReady: function() {
-        // check to see if Bluetooth is turned on.
-        // this function is called only
-        //if isEnabled(), below, returns success:
-        var listPorts = function() {
-            // list the available BT ports:
-            bluetoothSerial.list(
-                function(results) {
-                    app.display(JSON.stringify(results));
-                },
-                function(error) {
-                    app.display(JSON.stringify(error));
-                }
-            );
-        }
+});
 
-        // if isEnabled returns failure, this function is called:
-        var notEnabled = function() {
-            app.display("Bluetooth is not enabled.")
-        }
+$("#BOTON").click(function(){
+  sendData();
+});
 
-         // check if Bluetooth is on:
-        bluetoothSerial.isEnabled(
-            listPorts,
-            notEnabled
-        );
-    },
-/*
-    Connects if not connected, and disconnects if connected:
-*/
-    manageConnection: function() {
 
-        // connect() will get called only if isConnected() (below)
-        // returns failure. In other words, if not connected, then connect:
-        var connect = function () {
-            // if not connected, do this:
-            // clear the screen and display an attempt to connect
-            app.clear();
-            app.display("Attempting to connect. " +
-                "Make sure the serial port is open on the target device.");
-            // attempt to connect:
-            bluetoothSerial.connect(
-                app.macAddress,  // device to connect to
-                app.openPort,    // start listening if you succeed
-                app.showError    // show the error if you fail
-            );
-        };
+$("#BOTONEVENTO").click(function () {
+  evento = "Cerrar Mano";
+});
 
-        // disconnect() will get called only if isConnected() (below)
-        // returns success  In other words, if  connected, then disconnect:
-        var disconnect = function () {
-            app.display("attempting to disconnect");
-            // if connected, do this:
-            bluetoothSerial.disconnect(
-                app.closePort,     // stop listening to the port
-                app.showError      // show the error if you fail
-            );
-        };
 
-        // here's the real action of the manageConnection function:
-        bluetoothSerial.isConnected(disconnect, connect);
-    },
-/*
-    subscribes to a Bluetooth serial listener for newline
-    and changes the button:
-*/
-    openPort: function() {
-        // if you get a good Bluetooth serial connection:
-        app.display("Connected to: " + app.macAddress);
-        // change the button's name:
-        connectButton.innerHTML = "Disconnect";
-        // set up a listener to listen for newlines
-        // and display any new data that's come in since
-        // the last newline:
-        bluetoothSerial.subscribe('\n', function (data) {
-            app.clear();
-            app.display(data);
-        });
-    },
 
-/*
-    unsubscribes from any Bluetooth serial listener and changes the button:
-*/
-    closePort: function() {
-        // if you get a good Bluetooth serial connection:
-        app.display("Disconnected from: " + app.macAddress);
-        // change the button's name:
-        connectButton.innerHTML = "Connect";
-        // unsubscribe from listening:
-        bluetoothSerial.unsubscribe(
-                function (data) {
-                    app.display(data);
-                },
-                app.showError
-        );
-    },
-/*
-    appends @error to the message div:
-*/
-    showError: function(error) {
-        app.display(error);
-    },
 
-/*
-    appends @message to the message div:
-*/
-    display: function(message) {
-        var display = document.getElementById("message"), // the message div
-            lineBreak = document.createElement("br"),     // a line break
-            label = document.createTextNode(message);     // create the label
 
-        display.appendChild(lineBreak);          // add a line break
-        display.appendChild(label);              // add the message node
-    },
-/*
-    clears the message div:
-*/
-    clear: function() {
-        var display = document.getElementById("message");
-        display.innerHTML = "";
+
+
+//CONNECT
+
+function connect(address){
+  var paramsObj = {address:address};
+
+   //console.log("Connect : " + JSON.stringify(paramsObj));
+
+  bluetoothle.connect(connectSuccess, connectError, paramsObj);
+
+  return false;
+}
+
+function connectSuccess(obj){
+  console.log("Connect Success : " + JSON.stringify(obj));
+  //alert(JSON.stringify(obj));
+
+  if (obj.status == "connected")
+  {
+    console.log("Connected");
+    alert("Connected");
+
+    discover(myAddress);
+
+
+  }
+  else if (obj.status == "connecting")
+  {
+    console.log("Connecting");
+    alert("Connecting");
+  }
+  else
+  {
+    console.log("Unexpected Connect Status");
+    alert("Unexpected Connect Status");
+  }
+}
+
+function connectError(obj){
+  alert(JSON.stringify(obj));
+
+  console.log("Connect Error : " + JSON.stringify(obj));
+}
+
+
+
+//DISCOVER
+
+function discover(address){
+  var paramsObj = {address:address};
+
+  console.log("Discover : " + JSON.stringify(paramsObj));
+
+  bluetoothle.discover(discoverSuccess, discoverError, paramsObj);
+
+  return false;
+}
+
+function discoverSuccess(obj){
+  alert(JSON.stringify(obj));
+
+  console.log("Discover Success : " + JSON.stringify(obj));
+
+  if (obj.status == "discovered")
+  {
+    console.log("Discovered");
+    subscribe(myAddress,myServiceUuid,myCharacteristicUuid);
+  }
+  else
+  {
+    console.log("Unexpected Discover Status");
+  }
+}
+
+function discoverError(obj){
+  alert(JSON.stringify(obj));
+
+  console.log("Discover Error : " + JSON.stringify(obj));
+}
+
+
+
+
+
+
+function sendData(){
+     alert("SENDING DATA " + datos);
+    /* $.ajax({
+                        type:"POST",
+                        url: "http://192.168.1.34:3000/api/experimentos/",
+                        dataType: 'json',
+                        async: 'true',
+                        data: {
+                                "sesion": "553933306f1727f0025e60e4",
+                                "evento": evento,
+                                "momento": Date.now(),
+                                "resultado": datos 
+                            },
+                        success: function(){
+                            alert ('Done!');
+                        }
+                    });
+
+     if (evento!= "SinEvento"){
+       evento="SinEvento";
+     }*/
+    
+}
+
+//READ!
+
+function subscribe(address, serviceUuid, characteristicUuid){
+  var paramsObj = {address:address, serviceUuid:serviceUuid, characteristicUuid:characteristicUuid};
+
+  console.log("Subscribe : " + JSON.stringify(paramsObj));
+
+  bluetoothle.subscribe(subscribeSuccess, subscribeError, paramsObj);
+
+  return false;
+}
+
+function subscribeSuccess(obj){
+  //alert(JSON.stringify(obj));
+
+
+ // console.log("Subscribe Success : " + JSON.stringify(obj));
+
+  if (obj.status == "subscribedResult")
+  {
+	  var bytes = bluetoothle.encodedStringToBytes(obj.value);
+	  var decoded= bluetoothle.bytesToString(bytes);
+    if (datos.length == 50){
+     
+      
+      sendData();
+
+      datos = [];
+      
+
+    }else{
+
+      datos.push(decoded);
+
     }
-}; 
+
+    
+
+   
+  }
+  else if (obj.status == "subscribed")
+  {
+    console.log("Subscribed");
+  }
+  else
+  {
+    console.log("Unexpected Subscribe Status");
+  }
+}
+
+function subscribeError(obj){
+  alert(JSON.stringify(obj));
+
+  console.log("Subscribe Error : " + JSON.stringify(obj));
+}
+
+
+
