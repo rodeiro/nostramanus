@@ -1,5 +1,7 @@
 # Proyecto Nostramanus
 
+
+
 El objetivo del proyecto aquí presentado es crear una prótesis de extremidad superior con un sistema de información asociado que permita monitorizarla. La idea nace a partir de la comunidad Exandounamano, una comunidad sin ánimo de lucro dedicada a la creación y desarrollo de estas prótesis, y el intento de mejorar sus procesos de creación e investigación. 
 
 Durante el proyecto aquí descrito se ha construido un sistema completo, desde la prótesis física hasta el servidor que gestiona la información, construido en base a frameworks de alto nivel de abstracción. Todo ello siguiendo siempre la filosofía del hardware y software libre garantizando que el producto final llegue al mayor número de personas posible, tanto usuarios como desarrolladores voluntarios que sigan mejorando el producto. 
